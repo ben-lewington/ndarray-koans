@@ -15,7 +15,8 @@ mod cluster_generation_dataset {
         // Let's allocate an array of the right shape to store the final dataset.
         // We will then progressively replace these zeros with the observations in each generated
         // cluster.
-        let mut dataset: Array2<f64> = Array2::zeros(__);
+        let (centroid_count, centroid_col) = centroids.dim();
+        let mut dataset: Array2<f64> = Array2::zeros((1000 * centroid_count, centroid_col));
 
         // There are many ways to iterate over an n-dimensional array.
         // `genrows` returns "generalised rows" or "lanes":
@@ -28,6 +29,8 @@ mod cluster_generation_dataset {
         for (cluster_index, centroid) in centroids.genrows().into_iter().enumerate() {
             let cluster = generate_cluster(cluster_size, centroid, rng);
 
+            write_npy(format!("python/cluster_{}.npy", cluster_index), cluster.view()).expect("Failed to write array in npy format.");
+
             // Each cluster will contain `cluster_size` observations:
             // let's craft an index range in such a way that, at the end,
             // all zeros in `dataset` have been replaced with the observations in our
@@ -35,7 +38,7 @@ mod cluster_generation_dataset {
             // You can create n-dimensional index ranges using the `s!` macro: check
             // the documentation for more details on its syntax and examples of this macro
             // in action - https://docs.rs/ndarray/0.13.0/ndarray/macro.s.html
-            let indexes = s![__];
+            let indexes = s![1000 * cluster_index..(1000 * cluster_index + 1000), ..];
             // `slice_mut` returns a **mutable view**: same principle of `ArrayView`, with the
             // privilege of mutable access.
             // As you might guess, you can only have one mutable view of an array going around
@@ -74,6 +77,7 @@ mod cluster_generation_dataset {
         // `array![0, 1]` and `array![0, 1, 2]` are both of type `Array1` but they have different
         // shapes, `(2,) != `(3,)`.
         let centroids = array![[10., 10.], [1., 12.], [20., 30.], [-20., 30.],];
+        assert_eq!(centroids.dim(), (4, 2));
         let n = 1000;
 
         let mut rng = Isaac64Rng::seed_from_u64(42);

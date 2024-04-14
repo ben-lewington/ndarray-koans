@@ -21,7 +21,9 @@ mod constructors_from_vec {
     // Given that `Array` is a generalisation of `Vec`,
     // it's fair to expect that you can get a `Vec` and turn it into an `Array`.
     fn from_vec() {
-        let vector: Vec<u32> = __;
+        let vector: Vec<u32> = vec![
+            1, 1, 7, 7
+        ];
 
         let ndarray_vector = Array::from(vector);
 

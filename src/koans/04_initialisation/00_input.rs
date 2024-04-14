@@ -14,7 +14,7 @@ mod initialisation_input {
     // distinct observations from your dataset - as simple as that (and it works quite well!).
     pub fn get_random_centroids(
         n_clusters: usize,
-        observations: __,
+        observations: Array2<f64>,
         rng: &mut impl Rng,
     ) -> Array2<f64> {
         __

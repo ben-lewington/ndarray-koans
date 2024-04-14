@@ -20,8 +20,11 @@ mod cluster_generation_as_a_function {
     /// for `Array<T, Ix2>`.
     /// As you can imagine, you can use `Array1`, `Array3`, etc. to work with a different number
     /// of dimensions.
-    pub fn generate_cluster(n_observations: usize, n_features: usize) -> Array2<__> {
-        Array::random((n_observations, n_features), __)
+    pub fn generate_cluster(n_observations: usize, n_features: usize) -> Array2<f64> {
+        Array::random(
+            (n_observations, n_features),
+            ndarray_rand::rand_distr::Normal::new(0.0, 1.0).unwrap())
+
     }
 
     #[test]
